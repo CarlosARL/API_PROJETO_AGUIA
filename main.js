@@ -13,7 +13,6 @@ app.post("/cadEstudantes", async (req, res) => {
         senha: req.body.senha
     };
     req.body.numeroMatricula = Number(req.body.numeroMatricula);
-    if (!isNaN(req.body.numeroMatricula)) {
         if (
             req.body.numeroMatricula != null &&
             req.body.nome != null &&
@@ -24,7 +23,7 @@ app.post("/cadEstudantes", async (req, res) => {
             const checkNumeroMatricula = await Estudante.findOne({ numeroMatricula: req.body.numeroMatricula });
             try {
                 if (checkNumeroMatricula) {
-                    // se checkNumeroMatricula existir, significa que a matricula já estão sendo usados
+                    // se checkNumeroMatricula existir, significa que a numeroMatricula já estão sendo usados
                     res.send("Esta Matricula já está sendo utilizada");
                     return;
                 } else if (req.body.senha !== req.body.senhaConfirm) {
@@ -43,20 +42,17 @@ app.post("/cadEstudantes", async (req, res) => {
             res.send("Insira informações válidas");
             return;
         }
-    } else {
-        res.send("Insira informações válidas");
-        return;
-    }
+
 });
 
 app.post("/logEstudantes", async (req, res) => {
 
     if (
-        req.body.matricula != null &&
+        req.body.numeroMatricula != null &&
         req.body.senha != null
     ) {
         // Tente encontrar o usuário pelo nome
-        var user = await Estudante.findOne({ matricula: req.body.matricula });
+        var user = await Estudante.findOne({ numeroMatricula: req.body.numeroMatricula });
 
         if (!user) {
             res.send("Insira informações válidas");
