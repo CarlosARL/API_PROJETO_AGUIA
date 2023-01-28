@@ -26,11 +26,6 @@ const dadosEstudante = new Schema({
         type: Number,
         default: 0
     },
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
     senha: {
         type: String,
         requited: true
