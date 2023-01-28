@@ -10,7 +10,6 @@ app.post("/cadEstudantes", async (req, res) => {
         nome: req.body.nome,
         sobrenome: req.body.sobrenome,
         numeroMatricula: req.body.numeroMatricula,
-        email: req.body.email,
         senha: req.body.senha
     };
     req.body.numeroMatricula = Number(req.body.numeroMatricula);
@@ -19,22 +18,14 @@ app.post("/cadEstudantes", async (req, res) => {
             req.body.numeroMatricula != null &&
             req.body.nome != null &&
             req.body.sobrenome != null &&
-            req.body.email != null &&
             req.body.senha != null &&
             req.body.senhaConfirm != null && typeof req.body.numeroMatricula === 'number'
         ) {
-            const checkEmail = await Estudante.findOne({ email: req.body.email });
             const checkNumeroMatricula = await Estudante.findOne({ numeroMatricula: req.body.numeroMatricula });
             try {
-                if (checkEmail && checkNumeroMatricula) {
-                    // se checkEmail e checkNumeroMatricula existirem, significa que o email e o nome já estão sendo usados
-                    res.send("Este Email e esta Matricula já estão sendo utilizados");
-                    return;
-                } else if (checkEmail) {
-                    res.send("Este Email já está sendo utilizado");
-                    return;
-                } else if (checkNumeroMatricula) {
-                    res.send("Esta Matricula já está sendo utilizado");
+                if (checkNumeroMatricula) {
+                    // se checkNumeroMatricula existir, significa que a matricula já estão sendo usados
+                    res.send("Esta Matricula já está sendo utilizada");
                     return;
                 } else if (req.body.senha !== req.body.senhaConfirm) {
                     res.send("As senhas não coincidem");
@@ -61,27 +52,14 @@ app.post("/cadEstudantes", async (req, res) => {
 app.post("/logEstudantes", async (req, res) => {
 
     if (
-        req.body.email != null &&
+        req.body.matricula != null &&
         req.body.senha != null
     ) {
         // Tente encontrar o usuário pelo nome
-        var user = await Estudante.findOne({ email: req.body.email });
+        var user = await Estudante.findOne({ matricula: req.body.matricula });
 
-        // Se não encontrar o usuário pelo nome, tente encontrar pelo e-mail
         if (!user) {
-            req.body.email = Number(req.body.email);
-            if (!isNaN(req.body.email)) {
-                user = await Estudante.findOne({ numeroMatricula: req.body.email });
-            } else {
-                res.send("Insira informações válidas");
-                return;
-            }
-
-        }
-
-        // Se não encontrar o usuário nem pelo nome nem pelo e-mail, as credenciais estão incorretas
-        if (!user) {
-            res.send("As credências estão incorretas");
+            res.send("Insira informações válidas");
             return;
         }
 
