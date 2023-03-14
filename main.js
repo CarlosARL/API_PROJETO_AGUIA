@@ -70,6 +70,23 @@ app.post("/logEstudantes", async (req, res) => {
         res.send("Insira informações válidas");
     }
 });
+app.get('/estudante/:matricula', (req, res) => {
+  
+    Estudante.findOne({ numeroMatricula: req.params.matricula })
+      .then(estudante => {
+        if (estudante) {
+          const nome = estudante.nome;
+          const saldo = estudante.saldo;
+          res.status(200).json({ nome, saldo });
+        } else {
+          res.status(404).json({ mensagem: `Estudante com matrícula ${req.params.matricula} não encontrado.` });
+        }
+      })
+      .catch(error => {
+        res.status(500).json({ mensagem: `Erro ao buscar estudante com matrícula ${req.params.matricula}: ${error}` });
+      });
+  });
+  
 
 const porta = 3005;
 app.listen(porta, () => {
